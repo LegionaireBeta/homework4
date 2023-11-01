@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Registration</title>
+
+    <style>
+        *{
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+
+        }
+
+
+        body{
+            background: #6eff84;
+        }
+
+        h1{
+            margin-top: 2rem;
+            font-size: 5rem;
+            text-align: center;
+        }
+
+        .container{
+            margin: auto;
+            margin-top: 5rem;
+            width: 400px;
+            height: auto;
+            background: white;
+            border: 1px black solid;
+            border-radius: 5px;
+        }
+
+
+
+        .input{
+            display: flex;
+            flex-direction: column;
+            margin: 0.75rem 1rem;
+        }
+
+        .input lable{
+            margin-bottom: .25rem;
+            font-family: sans-serif;
+            font-size: 1.25rem;
+        }
+
+        .input input{
+            padding: 0 .25rem;
+            width: 90%;
+            height: 30px;
+            font-size: 1rem;
+            border-radius: 5px;
+
+        }
+
+        .button{
+            margin:1rem 0;
+            text-align: center;
+        }
+
+        .button input{
+            width: 50%;
+            height: 35px;
+            background: #6eff84;
+            font-size: 1.25rem;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+
+
+
+
+
+
+
+    </style>
+</head>
+<body>
+<h1>Login</h1>
+<div class="container">
+    <form action="/login" method="post">
+        <div class="input">
+            <lable>Username</lable>
+            <input name="username" placeholder="Your username">
+        </div>
+        <div class="input">
+            <lable>Password</lable>
+            <input type="password" name="password" placeholder="Your password">
+        </div>
+        <div class="button">
+            <input type="submit" value="Send">
+        </div>
+
+    </form>
+</div>
+</body>
+</html>
