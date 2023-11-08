@@ -9,23 +9,21 @@ public class AccountRepositoryJdbcImpl implements AccountRepository{
 
     private final Connection connection;
 
-    private static final String SQL_INSERT = "INSERT INTO users(uuid, first_name, last_name, username, age, password_hash) VALUES ";
-
+    private static final String SQL_INSERT = "INSERT INTO users(first_name, last_name, username, age, password_hash) VALUES ";
 
     public AccountRepositoryJdbcImpl(Connection connection){this.connection = connection;}
 
     @Override
     public void save(User user) throws SQLException {
 
-        String sql = SQL_INSERT + "(?, ?, ?, ?, ?, ?)";
+        String sql = SQL_INSERT + "(?, ?, ?, ?, ?)";
 
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setObject(1, user.getUuidOfUser());;
-        preparedStatement.setString(2, user.getNameOfUser());
-        preparedStatement.setString(3, user.getSurnameOfUser());
-        preparedStatement.setString(4, user.getUsernameOfUser());
-        preparedStatement.setInt(5, user.getAgeOfUser());
-        preparedStatement.setString(6, user.getPasswordOfUser());
+        preparedStatement.setString(1, user.getNameOfUser());
+        preparedStatement.setString(2, user.getSurnameOfUser());
+        preparedStatement.setString(3, user.getUsernameOfUser());
+        preparedStatement.setInt(4, user.getAgeOfUser());
+        preparedStatement.setString(5, user.getPasswordOfUser());
 
         preparedStatement.executeUpdate();
         System.out.println("Done");
@@ -48,12 +46,11 @@ public class AccountRepositoryJdbcImpl implements AccountRepository{
         }else {
             return false;
         }
-
     }
 
     @Override
     public boolean findUUID(UUID uuid) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM users WHERE uuid = ?";
+        String sql = "SELECT COUNT(*) FROM uuid_user WHERE uuid = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setObject(1, uuid);
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -63,26 +60,29 @@ public class AccountRepositoryJdbcImpl implements AccountRepository{
         }else {
             return false;
         }
-
     }
 
     @Override
-    public UUID getUUID(String username, String password, User user) throws SQLException {
+    public UUID addUUID(String username, User user) throws SQLException {
+        String sqlUser = "SELECT id FROM users WHERE username = ?";
+        String insertSqlUuid = "INSERT INTO uuid_user(id, uuid) VALUES(?, ?)";
 
-        String sql = "SELECT uuid FROM users WHERE username = ? AND password_hash = ?";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setString(1, user.getUsernameOfUser());
-        preparedStatement.setString(2, user.getPasswordOfUser());
+        UUID uuid = UUID.randomUUID();
 
-        ResultSet resultSet = preparedStatement.executeQuery();
+        PreparedStatement preparedStatement1 = connection.prepareStatement(sqlUser);
+        PreparedStatement preparedStatement2 = connection.prepareStatement(insertSqlUuid);
 
-        UUID uuidUser = null;
-
+        preparedStatement1.setString(1, user.getUsernameOfUser());
+        int id = 0;
+        ResultSet resultSet = preparedStatement1.executeQuery();
         while (resultSet.next()){
-            uuidUser = (UUID) resultSet.getObject("uuid");
+            id = resultSet.getInt("id");
         }
 
-        return uuidUser;
-    }
+        preparedStatement2.setInt(1,id);
+        preparedStatement2.setObject(2, uuid);
 
+        preparedStatement2.executeUpdate();
+        return uuid;
+    }
 }

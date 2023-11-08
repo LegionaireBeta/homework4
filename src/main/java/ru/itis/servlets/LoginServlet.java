@@ -84,9 +84,11 @@ public class LoginServlet extends HttpServlet {
 
         try {
             if(accountRepository.login(accountUsername, accountPassword, user)){
-                UUID uuid = accountRepository.getUUID(accountUsername, accountPassword, user);
-                Cookie idCoockie = new Cookie("id", uuid.toString());
+
+                Cookie idCoockie = new Cookie("id", accountRepository.addUUID(accountUsername, user).toString());
+                idCoockie.setMaxAge(60*2);
                 response.addCookie(idCoockie);
+
                 response.sendRedirect("/authorizationPage");
             }else {
                 response.sendRedirect("/login?error=1");

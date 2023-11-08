@@ -67,6 +67,7 @@ public class RegistrationServlet extends HttpServlet {
                 throw new RuntimeException(e);
             }
         }
+
         request.getRequestDispatcher("/html/registration.html").forward(request, response);
     }
 
@@ -78,10 +79,7 @@ public class RegistrationServlet extends HttpServlet {
         Integer accountAge = Integer.valueOf(request.getParameter("age"));
         String accountPassword = request.getParameter("password");
 
-        UUID uuid = UUID.randomUUID();
-
-        User user = User.builder().uuidOfUser(uuid)
-                .nameOfUser(accountName)
+        User user = User.builder().nameOfUser(accountName)
                 .surnameOfUser(accountSurname)
                 .usernameOfUser(accountUsername)
                 .ageOfUser(accountAge)
@@ -91,10 +89,7 @@ public class RegistrationServlet extends HttpServlet {
 
         try {
             accountRepository.save(user);
-            Cookie idCoockie = new Cookie("id", uuid.toString());
-            idCoockie.setMaxAge(60 * 5);
-            response.addCookie(idCoockie);
-            response.sendRedirect("/authorizationPage");
+            response.sendRedirect("/save");
         }catch (SQLException e){
             response.sendRedirect("/registration");
             throw new RuntimeException(e);
